@@ -17,12 +17,16 @@ namespace StudentGrades
 			InitializeComponent();
 			dgv1.ColumnCount = 11;
 
+			//store button is only enabled after computation
+			button2.Enabled = false;
+
 			//statistics are read only
 			textBox6.ReadOnly = true;
 			textBox7.ReadOnly = true;
 			textBox8.ReadOnly = true;
 			textBox9.ReadOnly = true;
 			textBox10.ReadOnly = true;
+			dgv1.ReadOnly = true;
 
 			//sets the name and header of all the columns in the datagridview
 			dgv1.Columns[0].Name = "Col 1";
@@ -168,9 +172,43 @@ namespace StudentGrades
 			return false;
 		}
 
+		//populates the subject scores with zeroes if no input is provided
+		private void insertZero()
+		{
+			if (textBox1.Text.ToString() == "")
+				textBox1.Text = "0";
+			if (textBox2.Text.ToString() == "")
+				textBox2.Text = "0";
+			if (textBox3.Text.ToString() == "")
+				textBox3.Text = "0";
+			if (textBox4.Text.ToString() == "")
+				textBox4.Text = "0";
+			if (textBox5.Text.ToString() == "")
+				textBox5.Text = "0";
+		}
+
+		//clears all textboxes
+		private void clearBoxes()
+		{
+			textBox1.Text = "";
+			textBox2.Text = "";
+			textBox3.Text = "";
+			textBox4.Text = "";
+			textBox5.Text = "";
+			textBox6.Text = "";
+			textBox7.Text = "";
+			textBox8.Text = "";
+			textBox9.Text = "";
+			textBox10.Text = "";
+			textBox11.Text = "";
+			textBox12.Text = "";
+		}
+
 		//this code executes when the compute button is clicked
 		private void button1_Click(object sender, EventArgs e)
 		{
+			insertZero();
+
 			//an array to hold all the scores
 			decimal[] scores = new decimal[5];
 			Boolean flg = true;
@@ -200,6 +238,8 @@ namespace StudentGrades
 
 				decimal max = findMax(scores);
 				textBox10.Text = max.ToString();
+
+				button2.Enabled = true;
 			}
 			else
 			{
@@ -231,7 +271,48 @@ namespace StudentGrades
 
 				//pushing the row to the datagridview Row
 				dgv1.Rows.Add(row);
+
+				button2.Enabled = false;
+				clearBoxes();
 			}
+		}
+		
+		//deletes a specific instance of student from the datagridview
+		private void button3_Click(object sender, EventArgs e)
+		{
+			string deleteStudent = textBox12.Text;
+			string name;
+			bool flag = false;
+
+			DataGridViewRow rw;
+			
+			for(int i =0; i < dgv1.RowCount; i++)
+			{
+				rw = dgv1.Rows[i];
+				if(rw.Cells[0].Value != null)
+				{
+					name = rw.Cells[0].Value.ToString();
+					if(name == deleteStudent)
+					{
+						dgv1.Rows.RemoveAt(i);
+						MessageBox.Show("Student deleted.");
+						flag = true;
+						break;
+					}
+				}
+			}
+			if (flag == false)
+			{
+				MessageBox.Show("Student does not exist.");
+			}
+
+			clearBoxes();
+		}
+
+		//deletes all of the rows from the datagridview
+		private void button4_Click(object sender, EventArgs e)
+		{
+			dgv1.Rows.Clear();
 		}
 	}
 }
