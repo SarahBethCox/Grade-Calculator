@@ -8,21 +8,45 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace Assignment01
+namespace StudentGrades
 {
 	public partial class Form1 : Form
 	{
 		public Form1()
 		{
 			InitializeComponent();
+			dgv1.ColumnCount = 11;
 
-			//average and grade are read only
+			//statistics are read only
 			textBox6.ReadOnly = true;
 			textBox7.ReadOnly = true;
 			textBox8.ReadOnly = true;
 			textBox9.ReadOnly = true;
 			textBox10.ReadOnly = true;
 
+			//sets the name and header of all the columns in the datagridview
+			dgv1.Columns[0].Name = "Col 1";
+			dgv1.Columns[0].HeaderText = "Name";
+			dgv1.Columns[1].Name = "Col 2";
+			dgv1.Columns[1].HeaderText = "Subject 1";
+			dgv1.Columns[2].Name = "Col 3";
+			dgv1.Columns[2].HeaderText = "Subject 2";
+			dgv1.Columns[3].Name = "Col 4";
+			dgv1.Columns[3].HeaderText = "Subject 3";
+			dgv1.Columns[4].Name = "Col 5";
+			dgv1.Columns[4].HeaderText = "Subject 4";
+			dgv1.Columns[5].Name = "Col 6";
+			dgv1.Columns[5].HeaderText = "Subject 5";
+			dgv1.Columns[6].Name = "Col 7";
+			dgv1.Columns[6].HeaderText = "Average";
+			dgv1.Columns[7].Name = "Col 8";
+			dgv1.Columns[7].HeaderText = "Letter Grade";
+			dgv1.Columns[8].Name = "Col 9";
+			dgv1.Columns[8].HeaderText = "Min";
+			dgv1.Columns[9].Name = "Col 10";
+			dgv1.Columns[9].HeaderText = "Med";
+			dgv1.Columns[10].Name = "Col 11";
+			dgv1.Columns[10].HeaderText = "Max";
 		}
 
 		//calculates letter grade based on average
@@ -121,6 +145,30 @@ namespace Assignment01
 			return med;
 		}
 
+		//checks if the student is already stored in the datagridview
+		private bool findDuplicates()
+		{
+			DataGridViewRowCollection allrows = dgv1.Rows;
+
+			foreach(DataGridViewRow rw in allrows)
+			{
+				//Cells[0] is first column in dgv, which is the name
+				if(rw.Cells[0].Value != null)
+				{
+					string name = rw.Cells[0].Value.ToString();
+					string studentName = textBox11.Text;
+
+					if(name == studentName)
+					{
+						MessageBox.Show(name + " is already in use.");
+						return true;
+					}
+				}
+			}
+			return false;
+		}
+
+		//this code executes when the compute button is clicked
 		private void button1_Click(object sender, EventArgs e)
 		{
 			//an array to hold all the scores
@@ -156,6 +204,33 @@ namespace Assignment01
 			else
 			{
 				MessageBox.Show("Error");
+			}
+		}
+
+		//stores info into the datagridview
+		private void button2_Click(object sender, EventArgs e)
+		{
+			//if name is not used
+			if(findDuplicates() == false)
+			{
+				//string array to hold stats
+				string[] row = new string[11];
+
+				//populating the array
+				row[0] = textBox11.Text;
+				row[1] = textBox1.Text;
+				row[2] = textBox2.Text;
+				row[3] = textBox3.Text;
+				row[4] = textBox4.Text;
+				row[5] = textBox5.Text;
+				row[6] = textBox6.Text;
+				row[7] = textBox7.Text;
+				row[8] = textBox8.Text;
+				row[9] = textBox9.Text;
+				row[10] = textBox10.Text;
+
+				//pushing the row to the datagridview Row
+				dgv1.Rows.Add(row);
 			}
 		}
 	}
